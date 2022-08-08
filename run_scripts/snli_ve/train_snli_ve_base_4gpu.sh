@@ -12,7 +12,7 @@ bpe_dir=../../utils/BPE
 user_dir=../../ofa_module
 
 data_dir=../../dataset/snli_ve_data
-data=${data_dir}/snli_ve_train.tsv,${data_dir}/snli_ve_dev.tsv
+data=${data_dir}/snli_ve_train_5K.tsv,${data_dir}/snli_ve_dev_5K.tsv
 restore_file=../../checkpoints/ofa_base.pt
 selected_cols=0,2,3,4,5
 
