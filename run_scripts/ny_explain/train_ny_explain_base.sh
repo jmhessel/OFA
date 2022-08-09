@@ -11,12 +11,12 @@ mkdir -p $log_dir $save_dir
 bpe_dir=../../utils/BPE
 user_dir=../../ofa_module
 
-data_dir=../../datasets/snli_ve_data
-data=${data_dir}/snli_ve_train_5K.tsv,${data_dir}/snli_ve_dev_5K.tsv
+data_dir=/home/jackh/caption-this/experiments/OFA_tsv
+data=${data_dir}/explanation_generation_split=0_train.tsv,${data_dir}/explanation_generation_split=0_val.tsv
 restore_file=../../checkpoints/ofa_base.pt
 selected_cols=0,2,3,4,5
 
-task=snli_ve
+task=ny_explain
 arch=ofa_base
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.0
@@ -31,7 +31,7 @@ decoder_drop_path_rate=0.1
 dropout=0.1
 attention_dropout=0.0
 max_src_length=80
-max_tgt_length=20
+max_tgt_length=128
 num_bins=1000
 patch_image_size=480
 prompt_type="prev_output"
