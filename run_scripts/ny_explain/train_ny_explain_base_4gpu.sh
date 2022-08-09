@@ -22,7 +22,7 @@ criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.0
 max_epoch=5
 warmup_ratio=0.06
-batch_size=32
+batch_size=4
 update_freq=8
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
@@ -46,7 +46,7 @@ for max_epoch in {10,}; do
     save_path=${save_dir}/${max_epoch}"_"${lr}
     mkdir -p $save_path
 
-    CUDA_VISIBLE_DEVICES=0 python3 ../../train.py \
+    CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 --master_port=${MASTER_PORT} ../../train.py \
         $data \
         --selected-cols=${selected_cols} \
         --bpe-dir=${bpe_dir} \
