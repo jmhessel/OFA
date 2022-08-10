@@ -14,18 +14,21 @@ user_dir=../../ofa_module
 data_dir=/home/jackh/caption-this/experiments/OFA_tsv
 data=${data_dir}/explanation_generation_split=0_train.tsv,${data_dir}/explanation_generation_split=0_val.tsv
 restore_file=../../checkpoints/ofa_base.pt
-selected_cols=0,2,3,4
+selected_cols=0,2,3,4,5
 
 task=ny_explain
 arch=ofa_base
 criterion=adjust_label_smoothed_cross_entropy
-label_smoothing=0.0
+label_smoothing=0.1
+max_epoch=5
 warmup_ratio=0.06
-batch_size=4
-update_freq=8
+batch_size=16
+update_freq=1
+
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
 decoder_drop_path_rate=0.1
+
 dropout=0.1
 attention_dropout=0.0
 max_src_length=80
@@ -77,7 +80,7 @@ for max_epoch in {100,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=10 --validate-interval=1 \
+        --save-interval=20 --validate-interval=5 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \
@@ -98,4 +101,4 @@ for max_epoch in {100,}; do
   done
 done
 
-#--minimize-best-checkpoint-metric \
+# 	--minimize-best-checkpoint-metric \

@@ -13,11 +13,11 @@ user_dir=../../ofa_module
 
 data_dir=/home/jackh/caption-this/experiments/OFA_tsv
 data=${data_dir}/explanation_generation_split=0_train.tsv,${data_dir}/explanation_generation_split=0_val.tsv
-restore_file=../../checkpoints/ofa_large.pt
+restore_file=../../checkpoints/ofa_huge.pt
 selected_cols=0,2,3,4,5
 
 task=ny_explain
-arch=ofa_large
+arch=ofa_huge
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
@@ -38,7 +38,7 @@ prompt_type="prev_output"
 
 echo "hi"
 
-for max_epoch in {10,}; do
+for max_epoch in {100,}; do
   echo "max_epoch "${max_epoch}
   for lr in {1e-5,}; do
     echo "lr "${lr}
