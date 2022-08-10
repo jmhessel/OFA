@@ -13,7 +13,7 @@ user_dir=../../ofa_module
 
 # socratic_split=0_test.tsv
 data_dir=/home/jackh/caption-this/experiments/OFA_tsv
-data=${data_dir}/socratic_split\=0_train.tsv,${data_dir}/socratic_split\=0_val.tsv
+data=${data_dir}/socratic_split\=0_train_small.tsv,${data_dir}/socratic_split\=0_val.tsv
 restore_file=../../checkpoints/ofa_tiny.pt
 selected_cols=0,2,3,4,5
 
@@ -22,7 +22,7 @@ arch=ofa_tiny
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
-batch_size=128
+batch_size=64
 update_freq=1
 
 resnet_drop_path_rate=0.0
@@ -97,7 +97,8 @@ for max_epoch in {30,}; do
         --fp16 \
         --fp16-scale-window=512 \
         --num-workers=0 \
-	--eval-print-samples
+	--eval-print-samples \
+	--eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
   done
 done
 
