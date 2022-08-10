@@ -23,7 +23,7 @@ criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
 batch_size=4
-update_freq=2
+update_freq=1
 
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
@@ -97,7 +97,8 @@ for max_epoch in {30,}; do
         --fp16 \
         --fp16-scale-window=512 \
         --num-workers=0 \
-	--eval-print-samples
+	--eval-print-samples \
+	--eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
   done
 done
 
