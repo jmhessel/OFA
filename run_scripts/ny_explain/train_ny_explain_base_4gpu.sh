@@ -20,7 +20,6 @@ task=ny_explain
 arch=ofa_base
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.0
-max_epoch=5
 warmup_ratio=0.06
 batch_size=4
 update_freq=8
@@ -37,9 +36,9 @@ prompt_type="prev_output"
 
 echo "hi"
 
-for max_epoch in {10,}; do
+for max_epoch in {100,}; do
   echo "max_epoch "${max_epoch}
-  for lr in {5e-6,}; do
+  for lr in {5e-5,}; do
     echo "lr "${lr}
 
     log_file=${log_dir}/${max_epoch}"_"${lr}".log"
@@ -78,7 +77,7 @@ for max_epoch in {10,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=1 --validate-interval=1 \
+        --save-interval=10 --validate-interval=1 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \
@@ -94,7 +93,8 @@ for max_epoch in {10,}; do
         --prompt-type=${prompt_type} \
         --fp16 \
         --fp16-scale-window=512 \
-        --num-workers=0
+        --num-workers=0 \
+	--eval-print-samples
   done
 done
 
