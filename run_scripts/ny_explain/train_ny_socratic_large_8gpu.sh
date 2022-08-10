@@ -97,7 +97,8 @@ for max_epoch in {30,}; do
         --fp16 \
         --fp16-scale-window=512 \
         --num-workers=0 \
-	--eval-print-samples
+	--eval-print-samples \
+	--eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
   done
 done
 
