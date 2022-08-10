@@ -22,8 +22,8 @@ arch=ofa_tiny
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
-batch_size=4
-update_freq=4
+batch_size=128
+update_freq=1
 
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
@@ -80,7 +80,7 @@ for max_epoch in {30,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=10 --validate-interval=5 \
+        --save-interval=10 --validate-interval=1 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \

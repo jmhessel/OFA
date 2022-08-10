@@ -39,7 +39,7 @@ prompt_type="prev_output"
 
 echo "hi"
 
-for max_epoch in {10,}; do
+for max_epoch in {30,}; do
   echo "max_epoch "${max_epoch}
   for lr in {1e-5,}; do
     echo "lr "${lr}
@@ -80,7 +80,7 @@ for max_epoch in {10,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=10 --validate-interval=1 \
+        --save-interval=10 --validate-interval=5 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \

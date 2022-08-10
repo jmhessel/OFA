@@ -95,6 +95,7 @@ class NyExplainTask(OFATask):
 
         
     def valid_step(self, sample, model, criterion, **extra_kwargs):
+
         loss, sample_size, logging_output = super().valid_step(sample, model, criterion)
 
         model.eval()
@@ -163,6 +164,8 @@ class NyExplainTask(OFATask):
                 ]
             )
         if self.cfg.eval_print_samples:
+            logger.info("example id: {}".format(sample['id'][0]))
+            logger.info("example input: "+ [self.bpe.decode(self.src_dict.string(x)).replace('<pad>','') for x in sample['net_input']['src_tokens'] ][0])
             logger.info("example hypothesis: " + hyps[0])
             logger.info("example reference: " + ' && '.join(refs[0]))
 

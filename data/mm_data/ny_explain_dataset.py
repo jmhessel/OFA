@@ -143,7 +143,7 @@ class NyExplainDataset(OFADataset):
         patch_image = self.patch_resize_transform(image)
         patch_mask = torch.tensor([True])
 
-        src_item = self.encode_text("joke about image: {}".format(caption))
+        src_item = self.encode_text("{}".format(caption))
         tgt_item = self.encode_text(" {}".format(explanation))
         ref_dict = {explanation: 1.0}
 
