@@ -22,8 +22,8 @@ arch=ofa_large
 criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
-batch_size=4
-update_freq=4
+batch_size=8
+update_freq=1
 
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
