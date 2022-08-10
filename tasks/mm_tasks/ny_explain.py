@@ -114,15 +114,23 @@ class NyExplainTask(OFATask):
         perplexities = (-summed_logprobs/sample['n_toks_for_ppl']).exp()
 
         logging_output['ppl_ny'] = perplexities.mean()
-        
+
         #look to caption for generation
         if self.cfg.eval_print_samples:
             hyps, refs = self._inference(self.sequence_generator, sample, model)
 
-        print(logging_output)
-        quit()
         return loss, sample_size, logging_output
-    
+
+
+    def reduce_metrics(self, logging_outputs, criterion):
+        super().reduce_metrics(logging_outputs, criterion)
+        def mean_logs(key):
+            import torch
+            result = sum(log.get(key, 0) for log in logging_outputs) / len(list(log.get(key, 0) for log in logging_outputs))
+            if torch.is_tensor(result):
+                result = result.cpu()
+            return result
+        metrics.log_scalar('ppl_ny', mean_logs('ppl_ny'))
 
     def _inference(self, generator, sample, model):
 
