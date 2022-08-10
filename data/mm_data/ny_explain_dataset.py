@@ -93,7 +93,7 @@ def collate(samples, pad_idx, eos_idx):
     return batch
 
 
-class SnliVeDataset(OFADataset):
+class NyExplainDataset(OFADataset):
     def __init__(
         self,
         split,
@@ -102,7 +102,7 @@ class SnliVeDataset(OFADataset):
         src_dict,
         tgt_dict=None,
         max_src_length=80,
-        max_tgt_length=30,
+        max_tgt_length=128,
         patch_image_size=224,
         add_caption=False,
         constraint_trie=None,
@@ -133,28 +133,15 @@ class SnliVeDataset(OFADataset):
         ])
 
     def __getitem__(self, index):
-        uniq_id, image, hypothesis, caption, label = self.dataset[index]
-        if label == 'contradiction':
-            label = 'no'
-        elif label == 'entailment':
-            label = 'yes'
-        elif label == 'neutral':
-            label = 'maybe'
-        else:
-            raise NotImplementedError
+        uniq_id, image, caption, explanation = self.dataset[index]
 
         image = Image.open(BytesIO(base64.urlsafe_b64decode(image)))
         patch_image = self.patch_resize_transform(image)
         patch_mask = torch.tensor([True])
 
-        hypothesis = self.pre_caption(hypothesis, self.max_src_length)
-        src_item = self.encode_text(' does the image describe " {} "?'.format(hypothesis))
-        tgt_item = self.encode_text(" {}".format(label))
-        ref_dict = {label: 1.0}
-
-        if self.add_caption:
-            caption = self.pre_caption(caption, self.max_src_length)
-            src_item = self.encode_text(' can image and text1 " {} " imply text2 " {} "?'.format(caption, hypothesis))
+        src_item = self.encode_text("joke about image: {}".format(caption))
+        tgt_item = self.encode_text(" {}".format(explanation))
+        ref_dict = {explanation: 1.0}
 
         src_item = torch.cat([self.bos_item, src_item, self.eos_item])
         if self.prompt_type == 'none':
@@ -183,14 +170,6 @@ class SnliVeDataset(OFADataset):
             "decoder_prompt": decoder_prompt,
             "ref_dict": ref_dict,
         }
-        if self.constraint_trie is not None:
-            constraint_mask = torch.zeros((len(target_item), len(self.tgt_dict))).bool()
-            start_idx = len(target_item) - len(tgt_item) - 1
-            for i in range(len(target_item)-len(tgt_item)-1, len(target_item)):
-                constraint_prefix_token = [self.tgt_dict.bos()] + target_item[start_idx:i].tolist()
-                constraint_nodes = self.constraint_trie.get_next_layer(constraint_prefix_token)
-                constraint_mask[i][constraint_nodes] = True
-            example["constraint_mask"] = constraint_mask
         return example
 
     def collater(self, samples, pad_to_length=None):
