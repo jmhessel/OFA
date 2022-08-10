@@ -17,6 +17,7 @@ for split in {train,dev,test}; do head -5000 snli_ve_$split\.tsv > snli_ve_$spli
 mkdir checkpoints
 wget https://ofa-beijing.oss-cn-beijing.aliyuncs.com/checkpoints/ofa_large.pt -O checkpoints/ofa_large.pt
 wget https://ofa-beijing.oss-cn-beijing.aliyuncs.com/checkpoints/ofa_base.pt -O checkpoints/ofa_base.pt
+wget https://ofa-beijing.oss-cn-beijing.aliyuncs.com/checkpoints/ofa_tiny.pt -O checkpoints/ofa_tiny.pt
 
 sudo apt-get install ffmpeg
 

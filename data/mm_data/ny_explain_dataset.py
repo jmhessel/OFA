@@ -44,6 +44,8 @@ def collate(samples, pad_idx, eos_idx):
     src_tokens = merge("source")
     src_lengths = torch.LongTensor([s["source"].ne(pad_idx).long().sum() for s in samples])
 
+    n_toks_for_ppl = torch.LongTensor([s['n_toks_for_ppl'] for s in samples])
+    
     patch_images = torch.stack([sample['patch_image'] for sample in samples], dim=0)
     patch_masks = torch.cat([sample['patch_mask'] for sample in samples])
 
@@ -87,7 +89,9 @@ def collate(samples, pad_idx, eos_idx):
         "ref_dict": ref_dict,
         "constraint_masks": constraint_masks,
         "decoder_prompts": decoder_prompts,
-        "target": target
+        "target": target,
+        "n_toks_for_ppl": n_toks_for_ppl
+        
     }
 
     return batch
@@ -133,7 +137,7 @@ class NyExplainDataset(OFADataset):
         ])
 
     def __getitem__(self, index):
-        uniq_id, image, caption, explanation = self.dataset[index]
+        uniq_id, image, caption, explanation, n_toks_for_ppl = self.dataset[index]
 
         image = Image.open(BytesIO(base64.urlsafe_b64decode(image)))
         patch_image = self.patch_resize_transform(image)
@@ -166,6 +170,7 @@ class NyExplainDataset(OFADataset):
             "patch_image": patch_image,
             "patch_mask": patch_mask,
             "target": target_item,
+            "n_toks_for_ppl": int(n_toks_for_ppl),
             "prev_output_tokens": prev_output_item,
             "decoder_prompt": decoder_prompt,
             "ref_dict": ref_dict,
