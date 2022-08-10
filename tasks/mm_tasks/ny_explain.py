@@ -89,38 +89,40 @@ class NyExplainTask(OFATask):
 
         return seq_generator
 
+    def bpe_pertoken_encode(self, toklist):
+        return [self.bpe.bpe.decoder[int(t)] if not t.startswith('<') else t
+                for t in toklist]
+
+        
     def valid_step(self, sample, model, criterion, **extra_kwargs):
-        print(criterion)
         loss, sample_size, logging_output = super().valid_step(sample, model, criterion)
-        print('loss = {}'.format(loss))
-        net_output = model(**sample["net_input"])
-        lprobs = model.get_normalized_probs(net_output, log_probs=True)
-        target = model.get_targets(sample, net_output)
-        print(lprobs)
-        print(criterion.padding_idx)
-        lprobs = lprobs[target != criterion.padding_idx]
-        target = target[target != criterion.padding_idx]
-        print(lprobs)
-        print(target)
-        quit()
 
         model.eval()
+        
+        net_output = model(**sample["net_input"])
+        # disable non language tokens for ppl
+        net_output[0][:, :, 50265:] = -16383. # close to half minimum value
+
+        # this is how you map back to bpe tokenization, but all looks good (e.g.., EOS is there).
+        #print(self.bpe_pertoken_encode([self.tgt_dict[t] for t in sample['target'][0].int().cpu()]))
+
+        lprobs = model.get_normalized_probs(net_output, log_probs=True)
+        lprobs_true = lprobs.gather(dim=-1, index=sample['target'].unsqueeze(-1)).squeeze(-1)
+        target_mask = (sample['target'] != criterion.padding_idx) * 1.0
+
+        summed_logprobs = (lprobs_true * target_mask).sum(1)
+        perplexities = (-summed_logprobs/sample['n_toks_for_ppl']).exp()
+
+        logging_output['ppl_ny'] = perplexities.mean()
+        
         #look to caption for generation
         if self.cfg.eval_print_samples:
             hyps, refs = self._inference(self.sequence_generator, sample, model)
-            
+
+        print(logging_output)
+        quit()
         return loss, sample_size, logging_output
-
-    def reduce_metrics(self, logging_outputs, criterion):
-        super().reduce_metrics(logging_outputs, criterion)
-
-        def sum_logs(key):
-            import torch
-            result = sum(log.get(key, 0) for log in logging_outputs)
-            if torch.is_tensor(result):
-                result = result.cpu()
-            return result
-
+    
 
     def _inference(self, generator, sample, model):
 

@@ -14,7 +14,7 @@ user_dir=../../ofa_module
 data_dir=/home/jackh/caption-this/experiments/OFA_tsv
 data=${data_dir}/explanation_generation_split=0_train.tsv,${data_dir}/explanation_generation_split=0_val.tsv
 restore_file=../../checkpoints/ofa_tiny.pt
-selected_cols=0,2,3,4
+selected_cols=0,2,3,4,5
 
 task=ny_explain
 arch=ofa_tiny
