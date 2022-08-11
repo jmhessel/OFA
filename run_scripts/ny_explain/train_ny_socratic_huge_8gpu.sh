@@ -39,9 +39,9 @@ prompt_type="prev_output"
 
 echo "hi"
 
-for max_epoch in {50,}; do
+for max_epoch in {10,}; do
   echo "max_epoch "${max_epoch}
-  for lr in {1e-7,5e-7,1e-6,5e-6,1e-5,2e-5,5e-5,1e-4,}; do
+  for lr in {1e-5,2e-5,5e-5,1e-4,}; do
     echo "lr "${lr}
 
     log_file=${log_dir}/${max_epoch}"_"${lr}".log"
