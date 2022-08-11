@@ -4,8 +4,8 @@
 # you need to specify different port numbers.
 export MASTER_PORT=7061
 
-log_dir=./logs
-save_dir=./checkpoints
+log_dir=./logs_huge
+save_dir=./checkpoints_huge
 mkdir -p $log_dir $save_dir
 
 bpe_dir=../../utils/BPE
@@ -23,7 +23,7 @@ criterion=adjust_label_smoothed_cross_entropy
 label_smoothing=0.1
 warmup_ratio=0.06
 batch_size=4
-update_freq=1
+update_freq=2
 
 resnet_drop_path_rate=0.0
 encoder_drop_path_rate=0.1
@@ -39,9 +39,9 @@ prompt_type="prev_output"
 
 echo "hi"
 
-for max_epoch in {30,}; do
+for max_epoch in {20,}; do
   echo "max_epoch "${max_epoch}
-  for lr in {1e-5,}; do
+  for lr in {1e-7,5e-7,1e-6,5e-6,1e-5,2e-5,5e-5,1e-4,}; do
     echo "lr "${lr}
 
     log_file=${log_dir}/${max_epoch}"_"${lr}".log"
@@ -80,7 +80,7 @@ for max_epoch in {30,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=10 --validate-interval=5 \
+        --save-interval=20 --validate-interval=1 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \
@@ -97,10 +97,10 @@ for max_epoch in {30,}; do
         --fp16 \
         --fp16-scale-window=512 \
         --num-workers=0 \
-	--eval-print-samples \
-	--eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
+	--eval-print-samples > ${log_file} 2>&1
   done
 done
 
 # 	--minimize-best-checkpoint-metric \
 # > ${log_file} 2>&1
+# --eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
