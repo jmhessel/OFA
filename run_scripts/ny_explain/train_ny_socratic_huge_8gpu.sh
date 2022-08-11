@@ -41,7 +41,7 @@ echo "hi"
 
 for max_epoch in {10,}; do
   echo "max_epoch "${max_epoch}
-  for lr in {1e-5,2e-5,5e-5,1e-4,}; do
+  for lr in {1e-5,2e-5,5e-5,1e-4,5e-4}; do
     echo "lr "${lr}
 
     log_file=${log_dir}/${max_epoch}"_"${lr}".log"
@@ -80,7 +80,7 @@ for max_epoch in {10,}; do
         --log-format=simple --log-interval=10 \
         --fixed-validation-seed=7 \
         --keep-best-checkpoints=1 \
-        --save-interval=50 --validate-interval=1 \
+        --save-interval=10 --validate-interval=1 \
         --save-interval-updates=500 --validate-interval-updates=500 \
         --best-checkpoint-metric=loss \
         --max-src-length=${max_src_length} \
