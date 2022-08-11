@@ -168,5 +168,9 @@ class NyExplainTask(OFATask):
             logger.info("example input: "+ [self.bpe.decode(self.src_dict.string(x)).replace('<pad>','') for x in sample['net_input']['src_tokens'] ][0])
             logger.info("example hypothesis: " + hyps[0])
             logger.info("example reference: " + ' && '.join(refs[0]))
+            logger.info("example id: {}".format(sample['id'][1]))
+            logger.info("example input: "+ [self.bpe.decode(self.src_dict.string(x)).replace('<pad>','') for x in sample['net_input']['src_tokens'] ][1])
+            logger.info("example hypothesis: " + hyps[1])
+            logger.info("example reference: " + ' && '.join(refs[1]))
 
         return hyps, refs
