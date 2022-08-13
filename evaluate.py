@@ -35,15 +35,11 @@ def apply_half(t):
 
 
 def main(cfg: DictConfig, **kwargs):
-
-    print('HERE A')
     utils.import_user_module(cfg.common)
 
-    print('HERE B')
     reset_logging()
     logger.info(cfg)
 
-    print('HERE C')
     assert (
             cfg.dataset.max_tokens is not None or cfg.dataset.batch_size is not None
     ), "Must specify batch size either with --max-tokens or --batch-size"
@@ -59,15 +55,12 @@ def main(cfg: DictConfig, **kwargs):
     if use_cuda:
         torch.cuda.set_device(cfg.distributed_training.device_id)
 
-    print('HERE D')
-
     # Load ensemble
     overrides = eval(cfg.common_eval.model_overrides)
     # Deal with beam-search / all-candidate VQA eval
     if cfg.task._name == "vqa_gen":
         overrides['val_inference_type'] = "beamsearch" if kwargs['beam_search_vqa_eval'] else "allcand"
 
-    print('HERE F')
     logger.info("loading model(s) from {}".format(cfg.common_eval.path))
     if kwargs["zero_shot"]:
         task = tasks.setup_task(cfg.task)
