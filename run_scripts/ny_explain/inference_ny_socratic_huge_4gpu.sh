@@ -34,24 +34,24 @@ echo "hi"
 
 for split in {0,1,2,3,4}; do
     for tr_split in {train,val,test}; do
-	data=${data_dir}/socratic_split\=${split}_${tr_split}.tsv
+	data=${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv
 
 	if [ $split == 4 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_4/checkpoint.best_loss_3.9720.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_4/checkpoint.best_loss_3.9500.pt"
 	elif [ $split == 3 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_3/checkpoint.best_loss_3.9650.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_3/checkpoint.best_loss_3.9410.pt"
 	elif [ $split == 2 ]; then
 	    checkpoint_path="checkpoints_huge/7_5e-5_2/checkpoint.best_loss_3.9350.pt"
 	elif [ $split == 1 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_1/checkpoint.best_loss_4.0290.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_1/checkpoint.best_loss_4.0130.pt"
 	elif [ $split == 0 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_0/checkpoint.best_loss_4.0070.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_0/checkpoint.best_loss_3.9740.pt"
 	fi
 	
 	save_path=${save_dir}/${split}_socratic_inference
 	mkdir -p $save_path
 
-	CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 --master_port=${MASTER_PORT} ../../evaluate.py \
+	echo CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 --master_port=${MASTER_PORT} ../../evaluate.py \
 		${data} \
 		--path=${checkpoint_path} \
 		--user-dir=${user_dir} \
@@ -70,7 +70,8 @@ for split in {0,1,2,3,4}; do
 		--zero-shot \
 		--prompt-type='prev_output' \
 		--fp16 \
-		--num-workers=0
+		--num-workers=0 \
+		--eval-print-samples
 	break
     done;
     break
