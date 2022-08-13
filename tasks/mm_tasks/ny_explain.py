@@ -163,6 +163,10 @@ class NyExplainTask(OFATask):
                     ).split('&&')
                 ]
             )
+
+        print(hyps)
+        print(refs)
+        quit()
         if self.cfg.eval_print_samples:
             logger.info("example id: {}".format(sample['id'][0]))
             logger.info("example input: "+ [self.bpe.decode(self.src_dict.string(x)).replace('<pad>','') for x in sample['net_input']['src_tokens'] ][0])
