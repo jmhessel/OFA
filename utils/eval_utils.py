@@ -54,6 +54,14 @@ def eval_caption(task, generator, models, sample, **kwargs):
         results.append({"image_id": str(sample_id), "caption": detok_hypo_str.translate(transtab).strip()})
     return results, None
 
+def eval_ny_explain(task, generator, models, sample, **kwargs):
+    hypos = task.inference_step(generator, models, sample)
+    results = []
+    for i, sample_id in enumerate(sample["id"].tolist()):
+        detok_hypo_str = decode_fn(hypos[i][0]["tokens"], task.tgt_dict, task.bpe, generator)
+        results.append({"image_id": str(sample_id), "caption": detok_hypo_str.translate(transtab).strip()})
+    return results, None
+
 
 def eval_caption_cn(task, generator, models, sample, **kwargs):
     hypos = task.inference_step(generator, models, sample)
@@ -396,6 +404,8 @@ def eval_step(task, generator, models, sample, **kwargs):
         return eval_image_classify(task, generator, models, sample, **kwargs)
     elif task.cfg._name == 'unify_speech_text_task' or task.cfg._name == 'speech_unify_cn_big_fbank':
         return eval_asr(task, generator, models, sample, **kwargs)
+    elif task.cfg._name == 'ny_explain':
+        return eval_ny_explain(task, generator, models, sample, **kwargs)
     else:
         raise NotImplementedError
 
