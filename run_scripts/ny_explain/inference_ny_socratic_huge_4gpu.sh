@@ -20,7 +20,7 @@ selected_cols=0,2,3,4,5
 
 task=ny_explain
 arch=ofa_huge
-batch_size=4
+batch_size=16
 
 max_src_length=80
 max_tgt_length=128
@@ -33,7 +33,7 @@ prompt_type="prev_output"
 echo "hi"
 
 for split in {0,1,2,3,4}; do
-    for tr_split in {train,val,test}; do
+    for tr_split in {val,test,train}; do
 	data=${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv
 
 	if [ $split == 4 ]; then
@@ -51,7 +51,7 @@ for split in {0,1,2,3,4}; do
 	save_path=${save_dir}/${split}_socratic_inference
 	mkdir -p $save_path
 
-	echo CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 --master_port=${MASTER_PORT} ../../evaluate.py \
+	CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 --master_port=${MASTER_PORT} ../../evaluate.py \
 		${data} \
 		--path=${checkpoint_path} \
 		--user-dir=${user_dir} \
@@ -70,9 +70,11 @@ for split in {0,1,2,3,4}; do
 		--zero-shot \
 		--prompt-type='prev_output' \
 		--fp16 \
-		--num-workers=0 \
-		--eval-print-samples
+		--num-workers=0
 	break
     done;
     break
 done;
+
+# actually, looks like sampler doesn't support sampling, just do beam, its fine.
+# --eval-args='{"nbest": 10, "sampling": true, "topp": 0.95}'
