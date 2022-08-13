@@ -71,9 +71,7 @@ for split in {0,1,2,3,4}; do
 		--prompt-type='prev_output' \
 		--fp16 \
 		--num-workers=0
-	break
     done;
-    break
 done;
 
 # actually, looks like sampler doesn't support sampling, just do beam, its fine.

@@ -14,6 +14,7 @@ import torch.distributed as dist
 
 from data import data_utils
 from tasks.nlg_tasks.gigaword import fix_tokenization
+import pprint
 
 
 def get_symbols_to_strip_from_output(generator):
@@ -45,8 +46,8 @@ def eval_ny_explain(task, generator, models, sample, **kwargs):
     hypos = task.inference_step(generator, models, sample)
     results = []
     for i, sample_id in enumerate(sample["id"].tolist()):
-        detok_hypo_str = decode_fn(hypos[i][0]["tokens"], task.tgt_dict, task.bpe, generator)
-        results.append({"image_id": str(sample_id), "caption": detok_hypo_str.translate(transtab).strip()})
+        detok_hypo_strs = [decode_fn(hyp['tokens'], task.tgt_dict, task.bpe, generator) for hyp in hypos[i]]
+        results.append({"sample": sample_id, "image_id": str(sample_id), "captions": [detok_hypo_str.strip() for detok_hypo_str in detok_hypo_strs]})
     return results, None
 
 

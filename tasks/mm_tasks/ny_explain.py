@@ -86,7 +86,6 @@ class NyExplainTask(OFATask):
         self, models, args, seq_gen_cls=None, extra_gen_cls_kwargs=None, prefix_allowed_tokens_fn=None,
     ):
         seq_generator = super().build_generator(models, args, seq_gen_cls, extra_gen_cls_kwargs, prefix_allowed_tokens_fn)
-
         return seq_generator
 
     def bpe_pertoken_encode(self, toklist):
