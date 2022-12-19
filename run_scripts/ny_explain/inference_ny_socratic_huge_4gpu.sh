@@ -30,24 +30,23 @@ num_bins=1000
 patch_image_size=480
 prompt_type="prev_output"
 
-echo "hi"
 
 for split in {0,1,2,3,4}; do
     for tr_split in {val,test,train}; do
 	data=${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv,${data_dir}/socratic_split\=${split}_${tr_split}.tsv
 
 	if [ $split == 4 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_4/checkpoint.best_loss_3.9500.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_4/checkpoint.best_loss_3.9460.pt"
 	elif [ $split == 3 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_3/checkpoint.best_loss_3.9410.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_3/checkpoint.best_loss_3.9310.pt"
 	elif [ $split == 2 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_2/checkpoint.best_loss_3.9350.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_2/checkpoint.best_loss_3.9330.pt"
 	elif [ $split == 1 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_1/checkpoint.best_loss_4.0130.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_1/checkpoint.best_loss_3.9810.pt"
 	elif [ $split == 0 ]; then
-	    checkpoint_path="checkpoints_huge/7_5e-5_0/checkpoint.best_loss_3.9740.pt"
+	    checkpoint_path="checkpoints_huge/7_5e-5_0/checkpoint.best_loss_3.9910.pt"
 	fi
-	
+
 	save_path=${save_dir}/${split}_socratic_inference
 	mkdir -p $save_path
 

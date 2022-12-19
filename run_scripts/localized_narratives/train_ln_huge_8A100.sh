@@ -11,8 +11,7 @@ mkdir -p $log_dir $save_dir
 bpe_dir=../../utils/BPE
 user_dir=../../ofa_module
 
-# ofa_localized_narratives_train_limit=1000.tsv
-data_dir=/net/nfs.cirrascale/mosaic/jackh/ln_ofa_tmp
+data_dir=/data/jackh/ofa_localized_narratives/
 
 restore_file=../../checkpoints/ofa_huge.pt
 selected_cols=0,2,3,4,5
@@ -43,7 +42,7 @@ for max_epoch in {7,}; do
     for lr in {5e-5,}; do
 	echo "lr "${lr}
 
-	data=${data_dir}/ofa_localized_narratives_train_limit=1000.tsv,${data_dir}/ofa_localized_narratives_val_limit=1000.tsv
+	data=${data_dir}/ofa_localized_narratives_train.tsv,${data_dir}/ofa_localized_narratives_val_limit=5000.tsv
 	
 	log_file=${log_dir}/${max_epoch}"_"${lr}".log"
 	save_path=${save_dir}/${max_epoch}"_"${lr}

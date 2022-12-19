@@ -100,8 +100,7 @@ for split in {4,3,2,1,0}; do
 				--prompt-type=${prompt_type} \
 				--fp16 \
 				--fp16-scale-window=512 \
-				--num-workers=0 \
-				--eval-print-samples > ${log_file} 2>&1
+				--num-workers=0 > ${log_file} 2>&1
 	done
     done
 done
@@ -109,3 +108,6 @@ done
 # 	--minimize-best-checkpoint-metric \
 # > ${log_file} 2>&1
 # --eval-args="{\"sampling\":1, \"sampling-topp\": 0.95}"
+# \
+#     --eval-print-samples
+   
