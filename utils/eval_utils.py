@@ -15,6 +15,7 @@ from fairseq import utils
 
 from data import data_utils
 from tasks.nlg_tasks.gigaword import fix_tokenization
+
 import editdistance
 import pprint
 
@@ -403,8 +404,11 @@ def eval_step(task, generator, models, sample, **kwargs):
         return eval_gigaword(task, generator, models, sample, **kwargs)
     elif task.cfg._name == 'image_classify':
         return eval_image_classify(task, generator, models, sample, **kwargs)
+<<<<<<< HEAD
     elif task.cfg._name == 'unify_speech_text_task' or task.cfg._name == 'speech_unify_cn_big_fbank':
         return eval_asr(task, generator, models, sample, **kwargs)
+=======
+>>>>>>> ee33e9ff7740326eb2e2e59180de42e95bd9eeda
     elif task.cfg._name == 'ny_explain':
         return eval_ny_explain(task, generator, models, sample, **kwargs)
     else:
